@@ -55,7 +55,7 @@ ESP Native Flasher is a native Kotlin Android app that talks to your board over 
 ### Arduino upload and serial monitor
 
 | Hex Uploader tab | Monitor tab |
-|:---:|:---:|:---:|
+|:---:|:---:|
 | ![Hex Uploader tab: hex file picker, upload type and Arduino board selection, upload log](docs/screenshot-hex-uploader.jpg) | ![Monitor tab: serial output, message box with Send, and the Start, Reset, Copy, Clear and Settings buttons](docs/screenshot-monitor.jpg) | 
 
 
