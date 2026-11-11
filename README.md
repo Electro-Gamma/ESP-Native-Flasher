@@ -1,6 +1,10 @@
 <div align="center">
+<h1 align="center">
+  <img src="docs/icon.svg" alt="ESP Native Flasher icon" width="64" height="64" align="middle">
+  ESP Native Flasher
+</h1>
 
-# ESP Native Flasher
+
 
 **A native Android firmware flashing tool for ESP32, ESP8266, BW16, and Arduino boards. Flash, erase, verify, and manage firmware directly from your Android device over USB OTG — without requiring a PC, Python, or the desktop esptool utility.**
 
