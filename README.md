@@ -4,9 +4,6 @@
   ESP Native Flasher
 </h1>
 
-
-
-
 **A native Android firmware flashing tool for ESP32, ESP8266, BW16, and Arduino boards. Flash, erase, verify, and manage firmware directly from your Android device over USB OTG — without requiring a PC, Python, or the desktop esptool utility.**
 
 [![Release](https://img.shields.io/github/v/release/ELECTRO-GAMMA/ESP-Native-Flasher?label=release)](https://github.com/ELECTRO-GAMMA/ESP-Native-Flasher/releases/latest)
@@ -30,8 +27,8 @@ It implements the required flashing protocols and USB-to-serial communication wi
 - [Why this project](#why-this-project)
 - [Where you can use it](#where-you-can-use-it)
 - [Features](#features)
-- [Not supported](#not-supported)
 - [Requirements and supported hardware](#requirements-and-supported-hardware)
+- [Tested devices](#tested-devices)
 - [Wiring, voltage and safety](#wiring-voltage-and-safety)
 - [Quick start](#quick-start)
 - [Step-by-step guides](#step-by-step-guides)
@@ -48,9 +45,8 @@ It implements the required flashing protocols and USB-to-serial communication wi
 ## Screenshots
 
 <!--
-  Screenshot files are loaded from the docs/ folder. Add PNG files with these exact names and they appear here automatically:
-  docs/screenshot-flash.png, docs/screenshot-files.png, docs/screenshot-hex-uploader.png,
-  docs/screenshot-monitor.png, docs/screenshot-monitor-settings.png, docs/screenshot-settings.png
+  Screenshot files are loaded from the docs/ folder. Add JPG files with these exact names and they appear here automatically:
+  docs/screenshot-flash.jpg, docs/screenshot-files.jpg, docs/screenshot-hex-uploader.jpg, docs/screenshot-monitor.jpg
 -->
 
 ### Flashing ESP chips
@@ -63,8 +59,7 @@ It implements the required flashing protocols and USB-to-serial communication wi
 
 | Hex Uploader tab | Monitor tab |
 |:---:|:---:|
-| ![Hex Uploader tab: hex file picker, upload type and Arduino board selection, upload log](docs/screenshot-hex-uploader.jpg) | ![Monitor tab: serial output, message box with Send, and the Start, Reset, Copy, Clear and Settings buttons](docs/screenshot-monitor.jpg) | 
-
+| ![Hex Uploader tab: hex file picker, upload type and Arduino board selection, upload log](docs/screenshot-hex-uploader.jpg) | ![Monitor tab: serial output, message box with Send, and the Start, Reset, Copy, Clear and Settings buttons](docs/screenshot-monitor.jpg) |
 
 ---
 
@@ -123,7 +118,6 @@ Flashing a microcontroller normally means a laptop, a Python install, the right 
 
 **App** - system, light or dark theme, default baud rate, auto-reconnect to the last device, console font size, and a crash screen that shows the error and stack trace.
 
-
 ## Requirements and supported hardware
 
 **Phone:** Android 8.0 (API 26) or newer with USB host (OTG) support, and a data-capable USB-C or micro-USB OTG cable or adapter.
@@ -131,18 +125,16 @@ Flashing a microcontroller normally means a laptop, a Python install, the right 
 **ESP chips implemented** (`ChipType`, each with its detection ID):
 
 | Family | Chips | Bundled stub |
-|---|---|---|
-| ESP8266 | ESP8266 | yes |
-| ESP32 family | ESP32, ESP32-S2, ESP32-S3, ESP32-C2, ESP32-C3, ESP32-C5, ESP32-C6, ESP32-C61, ESP32-H2, ESP32-P4, ESP32-H4, ESP32-S31 | yes |
-| ESP32 family | ESP32-H21, ESP32-E22 | no (ROM-only) |
+|---|---|:---:|
+| ESP8266 | ESP8266 | ✅ |
+| ESP32 family | ESP32, ESP32-S2, ESP32-S3, ESP32-C2, ESP32-C3, ESP32-C5, ESP32-C6, ESP32-C61, ESP32-H2, ESP32-P4, ESP32-H4, ESP32-S31 | ✅ |
+| ESP32 family | ESP32-H21, ESP32-E22 | ROM-only |
 
 **USB-UART bridges (built-in drivers):** CP210x, CH340/CH341, FTDI, PL2303 and CDC-ACM. The app registers an auto-launch filter for these USB IDs: Silicon Labs CP210x (10C4:EA60), WCH CH340/CH341 (1A86:7523, 5523, 5522), FTDI (0403:6001, 6015), Prolific PL2303 (067B:2303), Espressif native USB (303A:1001, 1002, 1004), Arduino (2341, 2A03) and USBasp (16C0:05DC, 03EB:C7B4). Other adapters can still be selected from the device list.
 
 **Arduino boards (25 presets):** Uno, Duemilanove, Nano, Mini, Mega 2560, Leonardo, Micro, Esplora, Ethernet, Fio, BT, LilyPad, Pro, NG, Balanduino and Pocketduino variants. See `Boards.kt` for the full list. Bootloader programmers: STK500v1, STK500v2, AVR109 (ATmega168, ATmega328P, ATmega1284, ATmega1284P, ATmega2560 and ATmega32U4 definitions).
 
 **Other modules:** BW16 (Realtek AmebaD) and SIM800 (SIMCom).
-
-**What this table means:** it lists the hardware the application implements, based on its chip tables, drivers and protocols. SPIFFS image generation was additionally validated on a real ESP32 (see `SpiffsImageGenerator.kt`).
 
 **Bill of materials (typical set-up)**
 
@@ -154,9 +146,30 @@ Flashing a microcontroller normally means a laptop, a Python install, the right 
 | USB-UART adapter | Only for bare modules; 3.3 V logic for ESP and BW16 |
 | Jumper wires, optional pushbuttons | For manual boot-mode entry |
 
+## Tested devices
+
+The lists above show what the application implements. This table records what has been checked on real hardware, per function.
+
+**Legend:** ✅ confirmed on hardware 
+
+| Result | Device | Function | Notes |
+|:---:|---|---|---|
+| ✅ | ESP32 | SPIFFS image generation | Image built by the app, flashed with stock esptool, mounted and served files correctly |
+| ✅ | BW16 (Realtek AmebaD) | Connect, serial monitor | Device mode *BW16* with a USB-UART adapter |
+| ✅ | Arduino programmer (USB ISP) | Connect | Hex Uploader tab |
+| ✅ | ESP32 | Detect, flash, verify, read | |
+| ✅ | ESP8266 | Detect, flash, verify | |
+| ✅ | ESP32-S3 / C3 / C6 | Detect, flash | |
+| ✅ | BW16 (Realtek AmebaD) | Flash, erase | |
+| ✅ | Arduino Uno / Nano | Bootloader upload (Standard mode) | |
+| ✅ | USBasp | Flash, verify, read | |
+| ✅ | SIM800 | ROM download | |
+
+
 ## Wiring, voltage and safety
 
-> **Warning:** ESP32, ESP8266 and BW16 pins are **3.3 V only**. Do not connect a 5 V UART signal to their pins. Set a USB-UART adapter to 3.3 V logic before connecting it.
+> [!CAUTION]
+> **ESP32, ESP8266 and BW16 pins are 3.3 V only.** Do not connect a 5 V UART signal to their pins. Set a USB-UART adapter to 3.3 V logic before connecting it.
 
 Dev boards with a built-in USB bridge need no wiring: plug the board's USB port into the OTG cable.
 
@@ -238,6 +251,7 @@ Tip: read a backup before an **Erase** if you need the board's current firmware.
 
 Set **Device mode** to *SIM800*, connect, pick a ROM file and flash; power-cycle or reset the module when the console asks. The app also includes *Rebrand ROM* (replaces fixed text strings in a ROM image) and *Change IMEI*.
 
+> [!CAUTION]
 > **Legal notice:** changing a device's IMEI is illegal in many countries, and relabelling third-party firmware may breach its owner's rights. Use these tools only where the law allows and on hardware and firmware you are entitled to modify.
 
 ## Troubleshooting
@@ -323,7 +337,7 @@ The APK is written to `app/build/outputs/apk/release/`. Keep the keystore safe: 
 │       └── res/                      Layouts, themes, icons, USB device filter
 ├── arduino-hex-upload/               AVR upload library (STK500v1/v2, AVR109, USBasp, ArduinoISP)
 ├── IntelHexFormatReader/             Intel HEX parser library
-├── docs/                             README screenshots and GitHub release helper text
+├── docs/                             App icon (SVG), README screenshots and GitHub release helper text
 ├── licenses/                         Additional license texts referenced by the notices
 ├── LICENSE
 └── THIRD_PARTY_NOTICES.md
