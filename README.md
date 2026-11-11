@@ -123,18 +123,6 @@ Flashing a microcontroller normally means a laptop, a Python install, the right 
 
 **App** - system, light or dark theme, default baud rate, auto-reconnect to the last device, console font size, and a crash screen that shows the error and stack trace.
 
-## Not supported
-
-- **iOS** and desktop operating systems: this is an Android app.
-- **Wireless flashing** (Wi-Fi OTA, Bluetooth): the app only talks over USB.
-- Phones **without USB host (OTG) support**.
-- eFuse burning, secure-boot and flash-encryption key management, ELF-to-image conversion and image merging. The app reads security status but does not provision anything.
-- **Reading flash back with the stub off** on any chip except classic ESP32 (the other ROMs have no flash-read command).
-- **Verify on ESP8266 with the stub off**: the ESP8266 ROM has no MD5 command, so the app skips the check for that file and logs it.
-- **Verify and Read in the Hex Uploader's Standard and Custom modes**: these modes upload only; use USBasp or ArduinoISP for Verify and Read.
-- Microcontroller families other than AVR in the Hex Uploader (no ARM, STM32, RP2040, ...).
-- USB-serial adapters that do not use CDC-ACM, CP210x, CH340/CH341, FTDI or PL2303 protocols.
-- SIM800 mode cannot enter the boot ROM by itself: power-cycle or reset the module when the console asks.
 
 ## Requirements and supported hardware
 
