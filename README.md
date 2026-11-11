@@ -1,9 +1,9 @@
 <div align="center">
 <h1 align="center">
+  <img src="docs/icon.svg" alt="ESP Native Flasher icon" width="48" height="48" align="absmiddle">
   ESP Native Flasher
-  <img src="docs/icon.svg" alt="ESP Native Flasher icon" width="64" height="64" align="middle">
-  
 </h1>
+
 
 
 
