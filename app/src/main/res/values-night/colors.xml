@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Night-mode overrides of the console's theme-following colors (see
+     values/colors.xml's own comment). In light mode the console is a pale
+     panel with dark info/response text; in dark mode it flips back to a
+     dark panel with light info/response text - these are the values it
+     originally had before it was made theme-following, restored here rather
+     than reinvented. log_command/log_success/log_warning/log_error/log_debug
+     are deliberately NOT overridden - same values in both themes, per
+     values/colors.xml's comment. -->
+<resources>
+    <color name="console_background">#0D1B1E</color>
+    <color name="log_info">#CFD8DC</color>
+    <color name="log_response">#B0BEC5</color>
+</resources>

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Small rounded-pill background for inline status badges (e.g. the
+    "STUB" indicator next to the Progress section title). A fully-rounded
+    rect rather than a fixed corner radius so it stays pill-shaped
+    regardless of the badge text's width.
+-->
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+    <solid android:color="@color/esp_secondary" />
+    <corners android:radius="100dp" />
+</shape>

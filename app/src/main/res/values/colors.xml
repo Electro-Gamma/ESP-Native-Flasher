@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Brand palette -->
+    <color name="esp_primary">#00695C</color>
+    <color name="esp_primary_dark">#004D40</color>
+    <color name="esp_on_primary">#FFFFFF</color>
+    <color name="esp_secondary">#00838F</color>
+    <color name="esp_error">#B3261E</color>
+
+    <color name="esp_surface_light">#FBFDFB</color>
+    <color name="esp_surface_variant_light">#DDE4E2</color>
+    <color name="esp_on_surface_light">#191C1C</color>
+
+    <color name="esp_surface_dark">#101413</color>
+    <color name="esp_surface_variant_dark">#050807</color>
+    <color name="esp_on_surface_dark">#E0E3E1</color>
+
+    <!-- Console log-level colors and background - see values-night/colors.xml
+         for the dark-theme overrides of console_background/log_info/log_response.
+         log_command/log_success/log_warning/log_error/log_debug are the same
+         in both themes (unchanged from their original dark-background values;
+         they already read fine on a dark console and were left alone in the
+         light one on request, though log_warning in particular is fairly
+         faint against a light background). -->
+    <color name="log_command">#4FC3F7</color>
+    <color name="log_response">#455A64</color>
+    <color name="log_info">#37474F</color>
+    <color name="log_success">#66BB6A</color>
+    <color name="log_warning">#FFCA28</color>
+    <color name="log_error">#EF5350</color>
+    <color name="log_debug">#B39DDB</color>
+    <color name="console_background">@color/esp_surface_variant_light</color>
+</resources>

@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<full-backup-content>
+    <!-- Settings and remembered file URIs are small key/value prefs - safe to back up. -->
+    <include domain="sharedpref" path="." />
+    <!-- DataStore keeps its files in <app files dir>/datastore/ (there is no "datastore" backup domain). -->
+    <include domain="file" path="datastore/" />
+</full-backup-content>

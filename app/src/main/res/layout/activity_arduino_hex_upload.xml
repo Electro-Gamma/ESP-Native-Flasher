@@ -1,0 +1,614 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <!-- Despite the filename, this is no longer only an Activity's content
+         view - it's ArduinoHexUploadFragment's layout too (see that class),
+         embedded directly in MainActivity's HEX UPLOADER tab via a
+         FragmentContainerView in activity_main.xml. Kept this file/its
+         generated ActivityArduinoHexUploadBinding name as-is rather than
+         renaming, since nothing here actually depends on the file being
+         Activity-only and renaming would only churn the binding class name
+         for no behavioral benefit. The toolbar below intentionally has no
+         navigationIcon any more - there's no longer a separate screen to
+         navigate up from. -->
+    <!-- The whole green app bar is removed from view (visibility="gone") -
+         not just its "AVR Programmer" title text as before. Left in the tree
+         rather than deleted so binding.toolbar/binding.appBarLayout stay
+         valid and nothing else in this file (the NestedScrollView's
+         appbar_scrolling_view_behavior below, sized for a CoordinatorLayout
+         with an app bar) needs to change - a GONE AppBarLayout just
+         contributes no height/offset, so scrollContent starts flush at the
+         top of this tab's content area. -->
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/appBarLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:elevation="0dp"
+        android:background="?attr/colorPrimary"
+        app:liftOnScroll="true"
+        android:visibility="gone">
+
+        <com.google.android.material.appbar.MaterialToolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            app:titleTextColor="?attr/colorOnPrimary" />
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <androidx.core.widget.NestedScrollView
+        android:id="@+id/scrollContent"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        android:clipToPadding="false"
+        android:paddingBottom="72dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingHorizontal="12dp"
+            android:paddingTop="12dp">
+
+            <!-- Device status / USB connection - removed from this tab at the UI
+                 level only (visibility="gone"). Connecting the AVR Programmer
+                 (Standard/Custom/ArduinoISP, via usbSerialManager) and USBasp
+                 (via usbaspManager) now happens from the "Connect" button on
+                 the FLASH tab instead - see MainActivity's connectButton
+                 listener and ArduinoHexUploadFragment#requestDeviceConnection().
+                 Every id below (deviceStatusRow/-Icon/-Text) is left exactly as
+                 it was: refreshDeviceStatus()/onDeviceStatusRowClicked() in
+                 ArduinoHexUploadFragment still read/drive them unchanged, this
+                 card just no longer takes up space or is visible on screen. -->
+            <com.google.android.material.card.MaterialCardView
+                style="@style/Widget.EspFlasher.Card"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:visibility="gone">
+
+                <LinearLayout
+                    android:id="@+id/deviceStatusRow"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:padding="14dp"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:background="?attr/selectableItemBackground">
+
+                    <com.google.android.material.card.MaterialCardView
+                        android:layout_width="36dp"
+                        android:layout_height="36dp"
+                        app:cardCornerRadius="10dp"
+                        app:cardElevation="0dp"
+                        app:cardBackgroundColor="?attr/colorSurfaceVariant">
+
+                        <ImageView
+                            android:id="@+id/deviceStatusIcon"
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
+                            android:layout_gravity="center"
+                            android:src="@drawable/ic_usb_ahu"
+                            app:tint="?attr/colorOnSurfaceVariant" />
+                    </com.google.android.material.card.MaterialCardView>
+
+                    <TextView
+                        android:id="@+id/deviceStatusText"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:layout_marginStart="12dp"
+                        android:text="@string/device_none"
+                        android:textColor="?attr/colorOnSurface"
+                        android:textSize="14sp" />
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- Hex file -->
+            <com.google.android.material.card.MaterialCardView
+                style="@style/Widget.EspFlasher.Card"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="14dp">
+
+                    <TextView
+                        style="@style/TextAppearance.EspFlasher.SectionTitle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/section_hex_file" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical">
+
+                        <TextView
+                            android:id="@+id/hexFileName"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:layout_marginEnd="12dp"
+                            android:text="@string/no_file_selected"
+                            android:textColor="?attr/colorOnSurfaceVariant"
+                            android:textSize="14sp"
+                            android:maxLines="2"
+                            android:ellipsize="middle" />
+
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/browseButton"
+                            style="@style/Widget.Material3.Button.OutlinedButton"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/browse"
+                            android:contentDescription="@string/cd_browse"
+                            app:icon="@drawable/ic_folder_open"
+                            app:iconGravity="textStart" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/verifyRow"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical"
+                        android:visibility="gone">
+
+                        <ImageView
+                            android:id="@+id/verifyIcon"
+                            android:layout_width="18dp"
+                            android:layout_height="18dp"
+                            android:src="@drawable/ic_check_circle_ahu" />
+
+                        <TextView
+                            android:id="@+id/verifyText"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:layout_marginStart="8dp"
+                            android:textSize="13sp"
+                            android:textColor="?attr/colorOnSurfaceVariant" />
+                    </LinearLayout>
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- Upload type -->
+            <com.google.android.material.card.MaterialCardView
+                style="@style/Widget.EspFlasher.Card"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="14dp">
+
+                    <TextView
+                        style="@style/TextAppearance.EspFlasher.SectionTitle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/section_upload_type" />
+
+                    <LinearLayout
+                        android:id="@+id/uploadTypeGroup"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp"
+                        android:orientation="vertical">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal">
+
+                            <RadioButton
+                                android:id="@+id/radioStandard"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:checked="true"
+                                android:text="@string/upload_type_standard" />
+
+                            <RadioButton
+                                android:id="@+id/radioCustom"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:text="@string/upload_type_custom" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:layout_marginTop="6dp">
+
+                            <RadioButton
+                                android:id="@+id/radioUsbasp"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:text="@string/upload_type_usbasp" />
+
+                            <RadioButton
+                                android:id="@+id/radioArduinoIsp"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:text="@string/upload_type_arduino_isp" />
+                        </LinearLayout>
+                    </LinearLayout>
+
+                    <!-- Standard: board dropdown -->
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/boardInputLayout"
+                        style="@style/Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="14dp"
+                        android:hint="@string/board_label">
+
+                        <AutoCompleteTextView
+                            android:id="@+id/boardDropdown"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:inputType="none" />
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <!-- Custom: manual MCU / protocol / baud -->
+                    <LinearLayout
+                        android:id="@+id/customFieldsContainer"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:visibility="gone">
+
+                        <com.google.android.material.textfield.TextInputLayout
+                            style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="14dp"
+                            android:hint="@string/custom_board_name_label">
+
+                            <com.google.android.material.textfield.TextInputEditText
+                                android:id="@+id/customBoardName"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:inputType="text" />
+                        </com.google.android.material.textfield.TextInputLayout>
+
+                        <com.google.android.material.textfield.TextInputLayout
+                            style="@style/Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="10dp"
+                            android:hint="@string/mcu_label">
+
+                            <AutoCompleteTextView
+                                android:id="@+id/mcuDropdown"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:inputType="none" />
+                        </com.google.android.material.textfield.TextInputLayout>
+
+                        <com.google.android.material.textfield.TextInputLayout
+                            style="@style/Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="10dp"
+                            android:hint="@string/protocol_label">
+
+                            <AutoCompleteTextView
+                                android:id="@+id/protocolDropdown"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:inputType="none" />
+                        </com.google.android.material.textfield.TextInputLayout>
+
+                        <com.google.android.material.textfield.TextInputLayout
+                            style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="10dp"
+                            android:hint="@string/baud_rate_label">
+
+                            <com.google.android.material.textfield.TextInputEditText
+                                android:id="@+id/customBaudRate"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:inputType="number"
+                                android:text="57600" />
+                        </com.google.android.material.textfield.TextInputLayout>
+                    </LinearLayout>
+
+                    <!-- USBasp: MCU + memory type + ISP clock speed (raw-USB ISP programmer, not serial) -->
+                    <LinearLayout
+                        android:id="@+id/usbaspFieldsContainer"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:visibility="gone">
+
+                        <com.google.android.material.textfield.TextInputLayout
+                            style="@style/Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="14dp"
+                            android:hint="@string/mcu_label">
+
+                            <AutoCompleteTextView
+                                android:id="@+id/usbaspMcuDropdown"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:inputType="none" />
+                        </com.google.android.material.textfield.TextInputLayout>
+
+                        <com.google.android.material.textfield.TextInputLayout
+                            style="@style/Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="10dp"
+                            android:hint="@string/memory_type_label">
+
+                            <AutoCompleteTextView
+                                android:id="@+id/usbaspMemoryDropdown"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:inputType="none" />
+                        </com.google.android.material.textfield.TextInputLayout>
+
+                        <com.google.android.material.textfield.TextInputLayout
+                            style="@style/Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="10dp"
+                            android:hint="@string/sck_speed_label">
+
+                            <AutoCompleteTextView
+                                android:id="@+id/usbaspSckDropdown"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:inputType="none" />
+                        </com.google.android.material.textfield.TextInputLayout>
+
+                        <!-- Removed from this tab at the UI level only. USBasp Read/Verify
+                             now run from the "Read"/"Verify" buttons on the FLASH tab instead
+                             - see MainActivity's readButton/verifyButton listeners and
+                             ArduinoHexUploadFragment#requestRead()/#requestVerify(). Both
+                             buttons and their unmodified startRead()/startVerify() click
+                             listeners (in onViewCreated below) are left exactly as they were. -->
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:layout_marginTop="14dp"
+                            android:visibility="gone">
+
+                            <com.google.android.material.button.MaterialButton
+                                android:id="@+id/usbaspReadButton"
+                                style="@style/Widget.Material3.Button.OutlinedButton"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:layout_marginEnd="8dp"
+                                android:text="@string/read_action" />
+
+                            <com.google.android.material.button.MaterialButton
+                                android:id="@+id/usbaspVerifyButton"
+                                style="@style/Widget.Material3.Button.OutlinedButton"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:text="@string/verify_action" />
+                        </LinearLayout>
+                    </LinearLayout>
+
+                    <!-- ArduinoISP: an Arduino running the ArduinoISP sketch acts as an SPI/ISP
+                         programmer for a different, externally-wired target chip (same MCU +
+                         memory-type model as USBasp; no SCK picker since the ArduinoISP sketch
+                         talks at a fixed baud rate). -->
+                    <LinearLayout
+                        android:id="@+id/arduinoIspFieldsContainer"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:visibility="gone">
+
+                        <com.google.android.material.textfield.TextInputLayout
+                            style="@style/Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="14dp"
+                            android:hint="@string/mcu_label">
+
+                            <AutoCompleteTextView
+                                android:id="@+id/arduinoIspMcuDropdown"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:inputType="none" />
+                        </com.google.android.material.textfield.TextInputLayout>
+
+                        <com.google.android.material.textfield.TextInputLayout
+                            style="@style/Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="10dp"
+                            android:hint="@string/memory_type_label">
+
+                            <AutoCompleteTextView
+                                android:id="@+id/arduinoIspMemoryDropdown"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:inputType="none" />
+                        </com.google.android.material.textfield.TextInputLayout>
+
+                        <!-- Removed from this tab at the UI level only. ArduinoISP Read/Verify
+                             now run from the "Read"/"Verify" buttons on the FLASH tab instead
+                             - see MainActivity's readButton/verifyButton listeners and
+                             ArduinoHexUploadFragment#requestRead()/#requestVerify(). Both
+                             buttons and their unmodified startRead()/startVerify() click
+                             listeners (in onViewCreated below) are left exactly as they were. -->
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:layout_marginTop="14dp"
+                            android:visibility="gone">
+
+                            <com.google.android.material.button.MaterialButton
+                                android:id="@+id/arduinoIspReadButton"
+                                style="@style/Widget.Material3.Button.OutlinedButton"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:layout_marginEnd="8dp"
+                                android:text="@string/read_action" />
+
+                            <com.google.android.material.button.MaterialButton
+                                android:id="@+id/arduinoIspVerifyButton"
+                                style="@style/Widget.Material3.Button.OutlinedButton"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:text="@string/verify_action" />
+                        </LinearLayout>
+                    </LinearLayout>
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- Progress -->
+            <LinearLayout
+                android:id="@+id/progressContainer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginBottom="10dp"
+                android:visibility="gone">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/progressLabelText"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="@string/uploading"
+                        android:textColor="?attr/colorOnSurface"
+                        android:textSize="13sp" />
+
+                    <TextView
+                        android:id="@+id/progressPercentText"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="0%"
+                        android:textColor="?attr/colorOnSurfaceVariant"
+                        android:textSize="13sp" />
+                </LinearLayout>
+
+                <com.google.android.material.progressindicator.LinearProgressIndicator
+                    android:id="@+id/progressBar"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="6dp"
+                    app:trackCornerRadius="4dp" />
+            </LinearLayout>
+
+            <!-- Log -->
+            <com.google.android.material.card.MaterialCardView
+                style="@style/Widget.EspFlasher.Card"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="14dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical">
+
+                        <TextView
+                            style="@style/TextAppearance.EspFlasher.SectionTitle"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="@string/section_log" />
+
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/copyLogButton"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:minWidth="0dp"
+                            android:paddingHorizontal="12dp"
+                            android:textSize="12sp"
+                            android:text="@string/copy_log" />
+                    </LinearLayout>
+
+                    <ScrollView
+                        android:id="@+id/logScrollView"
+                        android:layout_width="match_parent"
+                        android:layout_height="160dp"
+                        android:layout_marginTop="6dp"
+                        android:background="@color/console_background"
+                        android:padding="4dp"
+                        android:nestedScrollingEnabled="true">
+
+                        <TextView
+                            android:id="@+id/logText"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="monospace"
+                            android:text="@string/log_placeholder"
+                            android:textColor="@color/log_info"
+                            android:textSize="12sp" />
+                    </ScrollView>
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
+
+    <!-- Removed from this tab at the UI level only (visibility="gone").
+         Uploading now happens from the "Flash" button on the FLASH tab
+         instead - see MainActivity's flashButton listener and
+         ArduinoHexUploadFragment#requestUpload(). binding.uploadFab and
+         its click listener (still wired to the unmodified startUpload() in
+         onViewCreated below) are left exactly as they were. -->
+    <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+        android:id="@+id/uploadFab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:layout_margin="20dp"
+        android:text="@string/upload"
+        android:contentDescription="@string/cd_upload"
+        app:icon="@drawable/ic_upload_ahu"
+        app:iconTint="@color/ahu_color_on_secondary"
+        app:backgroundTint="@color/ahu_color_secondary"
+        android:textColor="@color/ahu_color_on_secondary"
+        app:elevation="4dp"
+        android:visibility="gone" />
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

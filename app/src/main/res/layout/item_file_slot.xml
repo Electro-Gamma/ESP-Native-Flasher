@@ -1,0 +1,199 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:paddingTop="8dp"
+    android:paddingBottom="8dp">
+
+    <LinearLayout
+        android:id="@+id/slotLabelRow"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical">
+
+        <com.google.android.material.checkbox.MaterialCheckBox
+            android:id="@+id/slotEnabledCheck"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="-8dp" />
+
+        <TextView
+            android:id="@+id/slotLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?attr/textAppearanceLabelLarge"
+            tools:text="Bootloader" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="4dp"
+        android:gravity="center_vertical">
+
+        <TextView
+            android:id="@+id/slotFileName"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:maxLines="1"
+            android:ellipsize="middle"
+            android:textAppearance="?attr/textAppearanceBodyMedium"
+            android:text="@string/no_file_selected" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/slotBrowseButton"
+            style="@style/Widget.Material3.Button.IconButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="4dp"
+            app:icon="@drawable/ic_folder_open"
+            android:contentDescription="@string/browse" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/slotDeleteButton"
+            style="@style/Widget.Material3.Button.IconButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="4dp"
+            app:icon="@drawable/ic_delete"
+            app:iconTint="?attr/colorError"
+            android:contentDescription="@string/clear" />
+    </LinearLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/slotOffsetContainer"
+        android:layout_width="140dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        style="@style/Widget.Material3.TextInputLayout.OutlinedBox.Dense"
+        android:hint="@string/offset">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/slotOffsetInput"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="text"
+            android:fontFamily="monospace"
+            tools:text="0x1000" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <!-- Only shown for the SPIFFS row (see MainActivity#renderFileSlots) -->
+    <LinearLayout
+        android:id="@+id/slotSpiffsToolsRow"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="6dp"
+        android:visibility="gone"
+        tools:visibility="visible">
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/slotDetectButton"
+            style="@style/Widget.Material3.Button.TonalButton"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginEnd="4dp"
+            android:insetTop="0dp"
+            android:insetBottom="0dp"
+            android:padding="0dp"
+            android:textSize="11sp"
+            android:text="@string/action_detect" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/slotGetButton"
+            style="@style/Widget.Material3.Button.TonalButton"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginEnd="4dp"
+            android:insetTop="0dp"
+            android:insetBottom="0dp"
+            android:padding="0dp"
+            android:textSize="11sp"
+            android:text="@string/action_get_spiffs" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/slotGenerateButton"
+            style="@style/Widget.Material3.Button.TonalButton"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginEnd="4dp"
+            android:insetTop="0dp"
+            android:insetBottom="0dp"
+            android:padding="0dp"
+            android:textSize="11sp"
+            android:text="@string/action_generate_spiffs" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/slotEraseButton"
+            style="@style/Widget.Material3.Button.OutlinedButton"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:insetTop="0dp"
+            android:insetBottom="0dp"
+            android:padding="0dp"
+            android:textSize="11sp"
+            android:textColor="?attr/colorError"
+            android:text="@string/action_erase" />
+    </LinearLayout>
+
+    <!-- Only shown for the SIM800 ROM row (see MainActivity#renderFileSlots) -->
+    <LinearLayout
+        android:id="@+id/slotSim800ToolsRow"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginTop="6dp"
+        android:visibility="gone"
+        tools:visibility="visible">
+
+        <com.google.android.material.checkbox.MaterialCheckBox
+            android:id="@+id/slotSim800FormatCheck"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="-8dp"
+            android:text="@string/sim800_format_fat" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="4dp">
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/slotSim800RebrandButton"
+                style="@style/Widget.Material3.Button.TonalButton"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginEnd="4dp"
+                android:insetTop="0dp"
+                android:insetBottom="0dp"
+                android:padding="0dp"
+                android:textSize="11sp"
+                android:text="@string/action_rebrand_rom" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/slotSim800ImeiButton"
+                style="@style/Widget.Material3.Button.TonalButton"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:insetTop="0dp"
+                android:insetBottom="0dp"
+                android:padding="0dp"
+                android:textSize="11sp"
+                android:text="@string/action_change_imei" />
+        </LinearLayout>
+    </LinearLayout>
+
+</LinearLayout>

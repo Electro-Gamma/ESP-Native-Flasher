@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TextView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/monitorLineText"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:fontFamily="monospace"
+    android:paddingHorizontal="4dp"
+    android:paddingVertical="0dp"
+    android:textColor="@color/log_info"
+    android:textIsSelectable="false"
+    android:textSize="12sp"
+    tools:text="ets Jun  8 2016 00:22:57" />

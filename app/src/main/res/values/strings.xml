@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">ESP Native Flasher</string>
+    <string name="settings_title">Settings</string>
+
+    <!-- Top tab bar (added for the four-tab redesign - see MainActivity#setupTabs) -->
+    <string name="tab_flash">Flash</string>
+    <string name="tab_files">Files</string>
+    <string name="tab_hex_uploader">Hex Uploader</string>
+    <string name="tab_monitor">Monitor</string>
+
+    <!-- Connection panel -->
+    <string name="section_connection">Connection</string>
+    <string name="usb_device">USB device</string>
+    <string name="refresh_devices">Refresh devices</string>
+    <string name="usb_host_unsupported">This device does not report USB Host support. Some phones still work via USB-C OTG - try connecting a device.</string>
+    <string name="baud_rate">Baud rate</string>
+    <string name="data_bits">Data bits</string>
+    <string name="stop_bits">Stop bits</string>
+    <string name="parity">Parity</string>
+    <string name="flow_control">Flow control</string>
+    <string name="upload_baud_section">Upload Baud Rate</string>
+    <string name="upload_baud_note">Used only for the actual firmware upload and flash reads - Detect and Erase always stay at the connection baud above.</string>
+    <string name="upload_baud_rate">Upload baud rate</string>
+    <string name="serial_settings_section">Serial settings</string>
+    <string name="upload_device_section">Upload Baud Rate &amp; Device</string>
+    <string name="device_mode_section">Device</string>
+    <string name="device_mode">Device mode</string>
+    <string name="connect">Connect</string>
+    <string name="disconnect">Disconnect</string>
+    <string name="reset_device">Reset</string>
+    <string name="enter_bootloader">Boot</string>
+
+    <!-- File selection -->
+    <string name="section_files">File Selection</string>
+    <string name="no_file_selected">No file selected</string>
+    <string name="browse">Browse</string>
+    <string name="offset">Offset</string>
+    <string name="action_generate_spiffs">SPIFFS</string>
+    <string name="action_get_spiffs">GET</string>
+    <string name="action_erase_spiffs">Erase SPIFFS</string>
+    <string name="slot_bootloader">Bootloader</string>
+    <string name="slot_partition_table">Partition Table</string>
+    <string name="slot_ota_data">OTA Data</string>
+    <string name="slot_application">Application BIN</string>
+    <string name="slot_firmware">Firmware BIN</string>
+    <string name="section_additional_files">Additional Files</string>
+    <string name="add_more_files">Add File</string>
+
+    <!-- Flash options -->
+    <string name="section_options">Flash Options</string>
+    <string name="opt_verify_after_write">Verify after write</string>
+    <string name="opt_erase_before_write">Erase before write</string>
+    <string name="opt_compress_data">Compress data</string>
+    <string name="opt_reset_after_flashing">Reset after flashing</string>
+    <string name="opt_skip_checksum">Skip checksum</string>
+    <string name="opt_keep_usb_connection">Keep USB connection</string>
+    <string name="opt_use_stub_loader">StubLoader</string>
+
+    <!-- Firmware credentials -->
+    <string name="credentials_section">Firmware Credentials</string>
+    <string name="credentials_description">Patches these into a firmware\'s built-in $your_..._maximum_32_characters placeholders before flashing (and before computing verify\'s checksum) - leave a field blank to leave that placeholder untouched. Nothing here is sent anywhere except into the file about to be flashed.</string>
+    <string name="credential_ssid_hint">WiFi SSID</string>
+    <string name="credential_password_hint">WiFi password</string>
+    <string name="credential_token_hint">Token</string>
+    <string name="credential_ota_auth_hint">OTA auth password</string>
+    <string name="sim800_credentials_description">Replacement text for Rebrand ROM - patched into the SIM800 ROM\'s built-in strings by exact match, each field limited to its original text\'s own length. Defaults match a stock rebrand; change any field to customize just that one replacement.</string>
+    <string name="credential_sim800_firmware_revision_hint">Firmware revision (replaces 1418B04SIM800L24)</string>
+    <string name="credential_sim800_product_name_hint">Product name (replaces SIMCOM_SIM800L)</string>
+    <string name="credential_sim800_firmware_version_hint">Firmware version (replaces SIM800 R14.18)</string>
+    <string name="credential_sim800_module_name_hint">Module name (replaces SIM800)</string>
+    <string name="credential_sim800_version_short_hint">Version, short (replaces R14.18)</string>
+
+    <!-- Progress -->
+    <string name="section_progress">Progress</string>
+    <string name="stub_badge_text">STUB</string>
+    <string name="stub_badge_description">Stub flasher is running</string>
+
+    <!-- Device info -->
+    <string name="section_device_info">Device Information</string>
+    <string name="no_device_detected">No device detected yet. Tap Detect after connecting.</string>
+
+    <!-- Console -->
+    <string name="section_console">Console</string>
+    <string name="copy">Copy</string>
+    <string name="clear">Clear</string>
+    <string name="save">Save</string>
+
+    <!-- Advanced -->
+    <string name="advanced_read_flash">Read Flash to File</string>
+    <string name="length">Length</string>
+    <string name="read_size_preset">Quick size</string>
+
+    <!-- Bottom action bar -->
+    <string name="action_detect">Detect</string>
+    <string name="action_erase">Erase</string>
+    <string name="erase_confirm_message">This erases the entire flash chip. Continue?</string>
+    <string name="erase_confirm_message_esp32">Erase the entire flash chip, or only the application and partition table (keeps NVS, PHY calibration, and SPIFFS/LittleFS data)?</string>
+    <string name="erase_option_all">Erase All</string>
+    <string name="erase_option_app_partition">App + Partition Only</string>
+    <string name="action_flash">Flash</string>
+    <string name="action_verify">Verify</string>
+    <string name="action_read">Read</string>
+    <string name="action_stop">Stop</string>
+
+    <!-- SIM800 -->
+    <string name="sim800_format_fat">Format FAT before writing</string>
+    <string name="action_rebrand_rom">Rebrand ROM…</string>
+    <string name="action_change_imei">Change IMEI…</string>
+    <string name="sim800_default_tac">35581309</string>
+    <string name="sim800_imei_dialog_message">Type Allocation Code (TAC) the new IMEI is generated from - 8 digits identifying the device model:</string>
+
+    <!-- Settings screen -->
+    <string name="settings_default_baud">Default baud rate</string>
+    <string name="settings_theme">Theme</string>
+    <string name="settings_auto_reconnect">Auto-reconnect to last device</string>
+    <string name="settings_console_font_size">Console font size</string>
+    <string name="settings_save_logs_auto">Save logs automatically after each operation</string>
+
+    <!-- Foreground service notification -->
+    <string name="notification_channel_name">Device session</string>
+    <string name="notification_channel_description">Shows connection and flashing status while ESP Native Flasher is running in the background</string>
+    <string name="notification_status_idle">Connected - idle</string>
+
+    <!-- Serial monitor (Monitor tab) -->
+    <string name="monitor_start">Start</string>
+    <string name="monitor_stop">Stop</string>
+    <string name="monitor_send">Send</string>
+    <string name="monitor_reset_board">Reset</string>
+    <string name="monitor_message_hint">Message (Enter to send)</string>
+    <string name="monitor_autoscroll">Autoscroll</string>
+    <string name="monitor_show_timestamp">Show timestamp</string>
+    <string name="monitor_line_ending">Line ending</string>
+    <string name="monitor_baud">Baud rate</string>
+    <string name="monitor_clear_output">Clear</string>
+    <string name="monitor_settings">Settings</string>
+    <string name="monitor_settings_title">Serial monitor settings</string>
+    <string name="monitor_done">Done</string>
+    <string name="monitor_status_opening">Opening serial port…</string>
+    <string name="monitor_status_running">Monitoring %1$s at %2$d baud</string>
+    <string name="monitor_not_running">Start the serial monitor first.</string>
+    <string name="monitor_le_none">No line ending</string>
+    <string name="monitor_le_nl">Newline</string>
+    <string name="monitor_le_cr">Carriage return</string>
+    <string name="monitor_le_both">Both NL &amp; CR</string>
+</resources>

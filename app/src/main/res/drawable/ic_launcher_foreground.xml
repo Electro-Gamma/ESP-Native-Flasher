@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- ESP module: silver shield with castellated pins, Wi-Fi arcs and a flash bolt.
+     Everything sits inside the 66dp adaptive-icon safe zone (centre 54,54). -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+
+    <!-- Pins: top, bottom, left, right -->
+    <path android:fillColor="#FFB0BEC5"
+        android:pathData="M38,25h4v9h-4z M52,25h4v9h-4z M66,25h4v9h-4z" />
+    <path android:fillColor="#FFB0BEC5"
+        android:pathData="M38,74h4v9h-4z M52,74h4v9h-4z M66,74h4v9h-4z" />
+    <path android:fillColor="#FFB0BEC5"
+        android:pathData="M25,38h9v4h-9z M25,52h9v4h-9z M25,66h9v4h-9z" />
+    <path android:fillColor="#FFB0BEC5"
+        android:pathData="M74,38h9v4h-9z M74,52h9v4h-9z M74,66h9v4h-9z" />
+
+    <!-- Silver shield -->
+    <path android:fillColor="#FFECEFF1"
+        android:pathData="M39,33h30a6,6 0 0 1 6,6v30a6,6 0 0 1 -6,6h-30a6,6 0 0 1 -6,-6v-30a6,6 0 0 1 6,-6z" />
+
+    <!-- Dark die panel -->
+    <path android:fillColor="#FF0B2E2C"
+        android:pathData="M40.5,37h27a3.5,3.5 0 0 1 3.5,3.5v27a3.5,3.5 0 0 1 -3.5,3.5h-27a3.5,3.5 0 0 1 -3.5,-3.5v-27a3.5,3.5 0 0 1 3.5,-3.5z" />
+
+    <!-- Wi-Fi arcs + dot -->
+    <path
+        android:pathData="M47.6,47.6A8,8 0 0 1 60.4,47.6"
+        android:strokeColor="#FF4DD0E1"
+        android:strokeWidth="2.4"
+        android:strokeLineCap="round" />
+    <path
+        android:pathData="M43.4,43.4A14,14 0 0 1 64.6,43.4"
+        android:strokeColor="#FF4DD0E1"
+        android:strokeWidth="2.4"
+        android:strokeLineCap="round" />
+    <path android:fillColor="#FF4DD0E1"
+        android:pathData="M54,50a2,2 0 1 0 0.01,0z" />
+
+    <!-- Flash bolt -->
+    <path android:fillColor="#FFFF5A4F"
+        android:pathData="M57.5,54L48.5,62.5L53,62.5L50.5,69L59.5,60L55,60Z" />
+</vector>

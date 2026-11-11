@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <!--
+        USB Host mode is how this app talks to the ESP-UART bridge chip directly
+        (no root, no external drivers). required="false" lets the app install on
+        devices that lack USB host support; MainViewModel checks for the feature
+        at runtime and surfaces a clear error if it's missing. tools:replace is
+        needed because the vendored :arduino-hex-upload module's own manifest
+        declares this same feature as required="true" - without it, the manifest
+        merger treats that mismatch as a build error rather than picking one.
+    -->
+    <uses-feature
+        android:name="android.hardware.usb.host"
+        android:required="false"
+        tools:replace="android:required" />
+
+    <!-- Foreground service: keeps the process (and the in-progress flash/erase
+         operation running in it) alive while the app is backgrounded. -->
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_CONNECTED_DEVICE" />
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+
+    <!--
+        ONE app, ONE launcher icon: .ui.MainActivity is the only activity with
+        MAIN/LAUNCHER. The Arduino Hex Uploader is the "Hex Uploader" tab inside
+        it (ArduinoHexUploadFragment), and the :arduino-hex-upload library
+        manifest declares no activities. Check with:
+        aapt2 dump badging app-release.apk | grep launchable-activity
+    -->
+    <application
+        android:name=".EspFlasherApplication"
+        android:allowBackup="true"
+        android:dataExtractionRules="@xml/data_extraction_rules"
+        android:fullBackupContent="@xml/backup_rules"
+        android:icon="@mipmap/ic_launcher"
+        android:label="${appLabel}"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        android:theme="@style/Theme.EspNativeFlasher">
+
+        <activity
+            android:name=".ui.MainActivity"
+            android:exported="true"
+            android:launchMode="singleTop"
+            android:windowSoftInputMode="adjustResize"
+            android:label="${appLabel}"
+            android:theme="@style/Theme.EspNativeFlasher">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+
+            <!-- Auto-launch (or bring to front) when a known USB-UART bridge is plugged in -->
+            <intent-filter>
+                <action android:name="android.hardware.usb.action.USB_DEVICE_ATTACHED" />
+            </intent-filter>
+            <meta-data
+                android:name="android.hardware.usb.action.USB_DEVICE_ATTACHED"
+                android:resource="@xml/usb_device_filter" />
+        </activity>
+
+        <activity
+            android:name=".ui.SettingsActivity"
+            android:exported="false"
+            android:label="@string/settings_title"
+            android:parentActivityName=".ui.MainActivity"
+            android:theme="@style/Theme.EspNativeFlasher" />
+
+        <!--
+            Deliberately isolated from the rest of the app: its own process
+            (so killing the crashed main process doesn't take it down too)
+            and the plain platform theme (so a theme/resource problem in the
+            main app can't also break the screen meant to report it).
+        -->
+        <activity
+            android:name=".CrashActivity"
+            android:exported="false"
+            android:process=":crashhandler"
+            android:theme="@android:style/Theme.Material.Light" />
+
+        <service
+            android:name=".service.FlashForegroundService"
+            android:exported="false"
+            android:foregroundServiceType="connectedDevice" />
+
+    </application>
+
+</manifest>

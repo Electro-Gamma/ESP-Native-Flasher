@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:gravity="center_vertical"
+    android:paddingTop="6dp"
+    android:paddingBottom="6dp">
+
+    <com.google.android.material.checkbox.MaterialCheckBox
+        android:id="@+id/entryEnabledCheck"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="-8dp"
+        android:checked="true" />
+
+    <TextView
+        android:id="@+id/entryFileName"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:maxLines="1"
+        android:ellipsize="middle"
+        android:textAppearance="?attr/textAppearanceBodyMedium"
+        tools:text="my_custom_data.bin" />
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:layout_width="110dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="6dp"
+        style="@style/Widget.Material3.TextInputLayout.OutlinedBox.Dense"
+        android:hint="@string/offset">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/entryOffsetInput"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="text"
+            android:fontFamily="monospace"
+            tools:text="0x0" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/entryDeleteButton"
+        style="@style/Widget.Material3.Button.IconButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="2dp"
+        app:icon="@drawable/ic_delete"
+        app:iconTint="?attr/colorError"
+        android:contentDescription="@string/clear" />
+
+</LinearLayout>

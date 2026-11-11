@@ -1,0 +1,1271 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:fitsSystemWindows="true">
+
+    <!-- Removed from the UI entirely (visibility="gone") - the header bar
+         showing the "ESP Native Flasher" app name/settings menu no longer
+         takes up any space above the tabs. binding.toolbar is left in place
+         (id/menu/background all unchanged) so MainActivity#setupToolbar's
+         setSupportActionBar(binding.toolbar) and the Settings item in
+         onOptionsItemSelected keep compiling and working exactly as before;
+         only their on-screen affordance is gone along with the bar. -->
+    <com.google.android.material.appbar.MaterialToolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="?attr/colorSurface"
+        app:title="@string/app_name"
+        app:menu="@menu/main_menu"
+        android:visibility="gone" />
+
+
+    <com.google.android.material.tabs.TabLayout
+        android:id="@+id/mainTabLayout"
+        style="@style/Widget.Material3.TabLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="?attr/colorSurface"
+        app:tabMode="fixed"
+        app:tabGravity="fill">
+
+        <com.google.android.material.tabs.TabItem
+            android:text="@string/tab_flash"
+            android:icon="@drawable/ic_tab_flash" />
+
+        <com.google.android.material.tabs.TabItem
+            android:text="@string/tab_files"
+            android:icon="@drawable/ic_folder_open" />
+
+        <com.google.android.material.tabs.TabItem
+            android:text="@string/tab_hex_uploader"
+            android:icon="@drawable/ic_tab_hex" />
+
+        <com.google.android.material.tabs.TabItem
+            android:text="@string/tab_monitor"
+            android:icon="@drawable/ic_tab_monitor" />
+
+    </com.google.android.material.tabs.TabLayout>
+
+    <FrameLayout
+        android:id="@+id/tabContentContainer"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+
+        <androidx.core.widget.NestedScrollView
+            android:id="@+id/flashTabScroll"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:fillViewport="true">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="12dp">
+
+                <!-- ============== CONNECTION PANEL ============== -->
+                <com.google.android.material.card.MaterialCardView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="10dp"
+                    style="@style/Widget.EspFlasher.Card">
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        style="@style/Widget.EspFlasher.CardContent">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            style="@style/TextAppearance.EspFlasher.SectionTitle"
+                            android:text="@string/section_connection" />
+
+                        <TextView
+                            android:id="@+id/usbHostWarningText"
+                            style="@style/TextAppearance.EspFlasher.Warning"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="4dp"
+                            android:text="@string/usb_host_unsupported"
+                            android:visibility="gone" />
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:layout_marginTop="8dp"
+                            android:gravity="center_vertical">
+
+                            <com.google.android.material.textfield.TextInputLayout
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                style="@style/Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+                                android:hint="@string/usb_device">
+                                <AutoCompleteTextView
+                                    android:id="@+id/deviceDropdown"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:inputType="none" />
+                            </com.google.android.material.textfield.TextInputLayout>
+
+                            <com.google.android.material.button.MaterialButton
+                                android:id="@+id/refreshDevicesButton"
+                                style="@style/Widget.Material3.Button.IconButton"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="4dp"
+                                app:icon="@drawable/ic_refresh"
+                                android:contentDescription="@string/refresh_devices" />
+                        </LinearLayout>
+
+                        <TextView
+                            android:id="@+id/deviceInfoText"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="4dp"
+                            android:fontFamily="monospace"
+                            android:textSize="12sp"
+                            tools:text="VID:PID 10C4:EA60\nManufacturer: Silicon Labs\nProduct: CP2102 USB to UART Bridge\nSerial: 0001" />
+
+                        <com.google.android.material.divider.MaterialDivider
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginVertical="10dp" />
+
+                        <LinearLayout
+                            android:id="@+id/serialSettingsToggleRow"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:gravity="center_vertical"
+                            android:clickable="true"
+                            android:focusable="true"
+                            android:background="?attr/selectableItemBackground">
+
+                            <TextView
+                                android:layout_width="0dp"
+                                android:layout_weight="1"
+                                android:layout_height="wrap_content"
+                                android:textAppearance="?attr/textAppearanceLabelLarge"
+                                android:text="@string/serial_settings_section" />
+
+                            <ImageView
+                                android:id="@+id/serialSettingsChevron"
+                                android:layout_width="24dp"
+                                android:layout_height="24dp"
+                                android:src="@drawable/ic_expand_more"
+                                app:tint="?attr/colorOnSurfaceVariant"
+                                android:contentDescription="@string/serial_settings_section" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:id="@+id/serialSettingsGroup"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            android:layout_marginTop="6dp"
+                            android:visibility="gone"
+                            tools:visibility="visible">
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal">
+
+                                <com.google.android.material.textfield.TextInputLayout
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    style="@style/Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+                                    android:hint="@string/baud_rate">
+                                    <AutoCompleteTextView
+                                        android:id="@+id/baudRateDropdown"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+                                        android:inputType="number" />
+                                </com.google.android.material.textfield.TextInputLayout>
+
+                                <Space android:layout_width="8dp" android:layout_height="1dp" />
+
+                                <com.google.android.material.textfield.TextInputLayout
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    style="@style/Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+                                    android:hint="@string/data_bits">
+                                    <AutoCompleteTextView
+                                        android:id="@+id/dataBitsDropdown"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+                                        android:inputType="none" />
+                                </com.google.android.material.textfield.TextInputLayout>
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal"
+                                android:layout_marginTop="8dp">
+
+                                <com.google.android.material.textfield.TextInputLayout
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    style="@style/Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+                                    android:hint="@string/stop_bits">
+                                    <AutoCompleteTextView
+                                        android:id="@+id/stopBitsDropdown"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+                                        android:inputType="none" />
+                                </com.google.android.material.textfield.TextInputLayout>
+
+                                <Space android:layout_width="8dp" android:layout_height="1dp" />
+
+                                <com.google.android.material.textfield.TextInputLayout
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    style="@style/Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+                                    android:hint="@string/parity">
+                                    <AutoCompleteTextView
+                                        android:id="@+id/parityDropdown"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+                                        android:inputType="none" />
+                                </com.google.android.material.textfield.TextInputLayout>
+                            </LinearLayout>
+
+                            <com.google.android.material.textfield.TextInputLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="8dp"
+                                style="@style/Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+                                android:hint="@string/flow_control">
+                                <AutoCompleteTextView
+                                    android:id="@+id/flowControlDropdown"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:inputType="none" />
+                            </com.google.android.material.textfield.TextInputLayout>
+                        </LinearLayout>
+
+                        <com.google.android.material.divider.MaterialDivider
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginVertical="10dp" />
+
+                        <LinearLayout
+                            android:id="@+id/uploadDeviceToggleRow"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:gravity="center_vertical"
+                            android:clickable="true"
+                            android:focusable="true"
+                            android:background="?attr/selectableItemBackground">
+
+                            <TextView
+                                android:layout_width="0dp"
+                                android:layout_weight="1"
+                                android:layout_height="wrap_content"
+                                android:textAppearance="?attr/textAppearanceLabelLarge"
+                                android:text="@string/upload_device_section" />
+
+                            <ImageView
+                                android:id="@+id/uploadDeviceChevron"
+                                android:layout_width="24dp"
+                                android:layout_height="24dp"
+                                android:src="@drawable/ic_expand_more"
+                                app:tint="?attr/colorOnSurfaceVariant"
+                                android:contentDescription="@string/upload_device_section" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:id="@+id/uploadDeviceGroup"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            android:layout_marginTop="6dp"
+                            android:visibility="gone"
+                            tools:visibility="visible">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textAppearance="?attr/textAppearanceLabelLarge"
+                                android:text="@string/upload_baud_section" />
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="2dp"
+                                android:textAppearance="?attr/textAppearanceBodySmall"
+                                android:text="@string/upload_baud_note" />
+
+                            <com.google.android.material.textfield.TextInputLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="6dp"
+                                style="@style/Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+                                android:hint="@string/upload_baud_rate">
+                                <AutoCompleteTextView
+                                    android:id="@+id/uploadBaudRateDropdown"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:inputType="number" />
+                            </com.google.android.material.textfield.TextInputLayout>
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="10dp"
+                                android:textAppearance="?attr/textAppearanceLabelLarge"
+                                android:text="@string/device_mode_section" />
+
+                            <com.google.android.material.textfield.TextInputLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="6dp"
+                                style="@style/Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+                                android:hint="@string/device_mode">
+                                <AutoCompleteTextView
+                                    android:id="@+id/deviceModeDropdown"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:inputType="none" />
+                            </com.google.android.material.textfield.TextInputLayout>
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:layout_marginTop="12dp"
+                            android:weightSum="4">
+
+                            <com.google.android.material.button.MaterialButton
+                                android:id="@+id/connectButton"
+                                android:layout_width="0dp"
+                                android:layout_weight="1"
+                                android:layout_height="wrap_content"
+                                android:layout_margin="2dp"
+                                android:minWidth="0dp"
+                                android:paddingStart="4dp"
+                                android:paddingEnd="4dp"
+                                android:maxLines="1"
+                                android:ellipsize="end"
+                                app:autoSizeTextType="uniform"
+                                app:autoSizeMinTextSize="9sp"
+                                app:autoSizeMaxTextSize="14sp"
+                                app:autoSizeStepGranularity="1sp"
+                                android:text="@string/connect" />
+
+                            <com.google.android.material.button.MaterialButton
+                                android:id="@+id/disconnectButton"
+                                style="@style/Widget.Material3.Button.OutlinedButton"
+                                android:layout_width="0dp"
+                                android:layout_weight="1"
+                                android:layout_height="wrap_content"
+                                android:layout_margin="2dp"
+                                android:minWidth="0dp"
+                                android:paddingStart="4dp"
+                                android:paddingEnd="4dp"
+                                android:maxLines="1"
+                                android:ellipsize="end"
+                                app:autoSizeTextType="uniform"
+                                app:autoSizeMinTextSize="9sp"
+                                app:autoSizeMaxTextSize="14sp"
+                                app:autoSizeStepGranularity="1sp"
+                                android:text="@string/disconnect" />
+
+                            <com.google.android.material.button.MaterialButton
+                                android:id="@+id/resetButton"
+                                style="@style/Widget.Material3.Button.OutlinedButton"
+                                android:layout_width="0dp"
+                                android:layout_weight="1"
+                                android:layout_height="wrap_content"
+                                android:layout_margin="2dp"
+                                android:minWidth="0dp"
+                                android:paddingStart="4dp"
+                                android:paddingEnd="4dp"
+                                android:maxLines="1"
+                                android:ellipsize="end"
+                                app:autoSizeTextType="uniform"
+                                app:autoSizeMinTextSize="9sp"
+                                app:autoSizeMaxTextSize="14sp"
+                                app:autoSizeStepGranularity="1sp"
+                                android:text="@string/reset_device" />
+
+                            <com.google.android.material.button.MaterialButton
+                                android:id="@+id/bootloaderButton"
+                                style="@style/Widget.Material3.Button.OutlinedButton"
+                                android:layout_width="0dp"
+                                android:layout_weight="1"
+                                android:layout_height="wrap_content"
+                                android:layout_margin="2dp"
+                                android:minWidth="0dp"
+                                android:paddingStart="4dp"
+                                android:paddingEnd="4dp"
+                                android:maxLines="1"
+                                android:ellipsize="end"
+                                app:autoSizeTextType="uniform"
+                                app:autoSizeMinTextSize="9sp"
+                                app:autoSizeMaxTextSize="14sp"
+                                app:autoSizeStepGranularity="1sp"
+                                android:text="@string/enter_bootloader" />
+                        </LinearLayout>
+                    </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
+
+                <!-- ============== FLASH OPTIONS PANEL ============== -->
+                <com.google.android.material.card.MaterialCardView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="10dp"
+                    style="@style/Widget.EspFlasher.Card">
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        style="@style/Widget.EspFlasher.CardContent">
+
+                        <LinearLayout
+                            android:id="@+id/flashOptionsToggleRow"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:gravity="center_vertical"
+                            android:clickable="true"
+                            android:focusable="true"
+                            android:background="?attr/selectableItemBackground">
+
+                            <TextView
+                                android:layout_width="0dp"
+                                android:layout_weight="1"
+                                android:layout_height="wrap_content"
+                                style="@style/TextAppearance.EspFlasher.SectionTitle"
+                                android:text="@string/section_options" />
+
+                            <ImageView
+                                android:id="@+id/flashOptionsChevron"
+                                android:layout_width="24dp"
+                                android:layout_height="24dp"
+                                android:src="@drawable/ic_expand_more"
+                                app:tint="?attr/colorOnSurfaceVariant"
+                                android:contentDescription="@string/section_options" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:id="@+id/flashOptionsGroup"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            android:layout_marginTop="6dp"
+                            android:visibility="gone"
+                            tools:visibility="visible">
+
+                        <com.google.android.material.checkbox.MaterialCheckBox
+                            android:id="@+id/verifyAfterWriteCheck"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="@string/opt_verify_after_write" />
+
+                        <com.google.android.material.checkbox.MaterialCheckBox
+                            android:id="@+id/eraseBeforeWriteCheck"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="@string/opt_erase_before_write" />
+
+                        <com.google.android.material.checkbox.MaterialCheckBox
+                            android:id="@+id/compressDataCheck"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="@string/opt_compress_data" />
+
+                        <com.google.android.material.checkbox.MaterialCheckBox
+                            android:id="@+id/resetAfterFlashingCheck"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="@string/opt_reset_after_flashing" />
+
+                        <com.google.android.material.checkbox.MaterialCheckBox
+                            android:id="@+id/skipChecksumCheck"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="@string/opt_skip_checksum" />
+
+                        <com.google.android.material.checkbox.MaterialCheckBox
+                            android:id="@+id/keepUsbConnectionCheck"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="@string/opt_keep_usb_connection" />
+
+                        <com.google.android.material.checkbox.MaterialCheckBox
+                            android:id="@+id/useStubLoaderCheck"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="@string/opt_use_stub_loader" />
+                        </LinearLayout>
+                    </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
+
+                <!-- ============== PROGRESS PANEL ============== -->
+                <com.google.android.material.card.MaterialCardView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="10dp"
+                    style="@style/Widget.EspFlasher.Card">
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        style="@style/Widget.EspFlasher.CardContent">
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:gravity="center_vertical">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                style="@style/TextAppearance.EspFlasher.SectionTitle"
+                                android:text="@string/section_progress" />
+
+                            <TextView
+                                android:id="@+id/stubBadge"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="8dp"
+                                android:background="@drawable/bg_badge_pill"
+                                android:paddingHorizontal="10dp"
+                                android:paddingVertical="2dp"
+                                android:text="@string/stub_badge_text"
+                                android:textColor="@color/esp_on_primary"
+                                android:textSize="11sp"
+                                android:textStyle="bold"
+                                android:letterSpacing="0.05"
+                                android:visibility="gone"
+                                tools:visibility="visible"
+                                android:contentDescription="@string/stub_badge_description" />
+                        </LinearLayout>
+
+                        <TextView
+                            android:id="@+id/operationLabelText"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="4dp"
+                            android:textAppearance="?attr/textAppearanceBodyMedium"
+                            tools:text="Idle" />
+
+                        <com.google.android.material.progressindicator.LinearProgressIndicator
+                            android:id="@+id/progressBar"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="8dp"
+                            android:max="100"
+                            app:trackCornerRadius="4dp" />
+
+                        <TextView
+                            android:id="@+id/progressDetailText"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="6dp"
+                            android:fontFamily="monospace"
+                            android:textSize="12sp"
+                            tools:text="0%  addr=0x00010000  1024 / 1048576 B  42.3 KB/s  ETA 24s" />
+                    </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
+
+                <!-- ============== DEVICE INFORMATION PANEL ============== -->
+                <com.google.android.material.card.MaterialCardView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="10dp"
+                    style="@style/Widget.EspFlasher.Card">
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        style="@style/Widget.EspFlasher.CardContent">
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            style="@style/TextAppearance.EspFlasher.SectionTitle"
+                            android:text="@string/section_device_info" />
+
+                        <TextView
+                            android:id="@+id/deviceInfoDetailText"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="4dp"
+                            android:fontFamily="monospace"
+                            android:textSize="12sp"
+                            android:text="@string/no_device_detected"
+                            tools:text="Chip: ESP32-S3\nRevision: —\nMAC: AA:BB:CC:DD:EE:FF\nCrystal: 40 MHz (nominal)\nFlash: 4 MB\nFlash mode: DIO\nFeatures: Wi-Fi, BLE\nSecure Boot: Disabled\nFlash Encryption: Disabled" />
+                    </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
+
+                <!-- ============== CONSOLE PANEL ============== -->
+                <com.google.android.material.card.MaterialCardView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="10dp"
+                    style="@style/Widget.EspFlasher.Card">
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        style="@style/Widget.EspFlasher.CardContent">
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:gravity="center_vertical">
+                            <TextView
+                                android:layout_width="0dp"
+                                android:layout_weight="1"
+                                android:layout_height="wrap_content"
+                                style="@style/TextAppearance.EspFlasher.SectionTitle"
+                                android:text="@string/section_console" />
+                            <com.google.android.material.button.MaterialButton
+                                android:id="@+id/copyLogButton"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="4dp"
+                                android:minWidth="0dp"
+                                android:paddingHorizontal="12dp"
+                                android:textSize="12sp"
+                                android:text="@string/copy" />
+                            <com.google.android.material.button.MaterialButton
+                                android:id="@+id/clearLogButton"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="4dp"
+                                android:minWidth="0dp"
+                                android:paddingHorizontal="12dp"
+                                android:textSize="12sp"
+                                android:text="@string/clear" />
+                            <com.google.android.material.button.MaterialButton
+                                android:id="@+id/saveLogButton"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="4dp"
+                                android:minWidth="0dp"
+                                android:paddingHorizontal="12dp"
+                                android:textSize="12sp"
+                                android:text="@string/save" />
+                        </LinearLayout>
+
+                        <androidx.recyclerview.widget.RecyclerView
+                            android:id="@+id/consoleRecyclerView"
+                            android:layout_width="match_parent"
+                            android:layout_height="300dp"
+                            android:layout_marginTop="6dp"
+                            android:background="@color/console_background"
+                            android:clipToPadding="false"
+                            android:padding="4dp" />
+                    </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
+
+                <View android:layout_width="match_parent" android:layout_height="72dp" />
+
+            </LinearLayout>
+        </androidx.core.widget.NestedScrollView>
+
+        <androidx.core.widget.NestedScrollView
+            android:id="@+id/filesTabScroll"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:fillViewport="true"
+            android:visibility="gone">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="12dp">
+
+                <!-- ============== FILE SELECTION PANEL ============== -->
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/filesCard"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="10dp"
+                    style="@style/Widget.EspFlasher.Card">
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        style="@style/Widget.EspFlasher.CardContent">
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            style="@style/TextAppearance.EspFlasher.SectionTitle"
+                            android:text="@string/section_files" />
+                        <LinearLayout
+                            android:id="@+id/fileSlotsContainer"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical" />
+
+                        <com.google.android.material.divider.MaterialDivider
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginVertical="8dp" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textAppearance="?attr/textAppearanceLabelLarge"
+                            android:text="@string/section_additional_files" />
+
+                        <LinearLayout
+                            android:id="@+id/customEntriesContainer"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical" />
+
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/addCustomEntryButton"
+                            style="@style/Widget.Material3.Button.OutlinedButton"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="4dp"
+                            app:icon="@drawable/ic_add"
+                            android:text="@string/add_more_files" />
+                    </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
+
+                <!-- ============== FIRMWARE CREDENTIALS PANEL (moved here from the Monitor tab) ============== -->
+                <com.google.android.material.card.MaterialCardView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="10dp"
+                    style="@style/Widget.EspFlasher.Card">
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        style="@style/Widget.EspFlasher.CardContent">
+
+                        <LinearLayout
+                            android:id="@+id/credentialsToggleRow"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:gravity="center_vertical"
+                            android:clickable="true"
+                            android:focusable="true"
+                            android:background="?attr/selectableItemBackground">
+
+                            <TextView
+                                android:layout_width="0dp"
+                                android:layout_weight="1"
+                                android:layout_height="wrap_content"
+                                android:textAppearance="?attr/textAppearanceLabelLarge"
+                                android:text="@string/credentials_section" />
+
+                            <ImageView
+                                android:id="@+id/credentialsChevron"
+                                android:layout_width="24dp"
+                                android:layout_height="24dp"
+                                android:src="@drawable/ic_expand_more"
+                                app:tint="?attr/colorOnSurfaceVariant"
+                                android:contentDescription="@string/credentials_section" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:id="@+id/credentialsGroup"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            android:layout_marginTop="6dp"
+                            android:visibility="gone"
+                            tools:visibility="visible">
+
+                            <!-- ESP32/ESP8266 fields - shown for every Device mode except SIM800 -->
+                            <LinearLayout
+                                android:id="@+id/espCredentialsGroup"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="vertical">
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginBottom="8dp"
+                                android:textAppearance="?attr/textAppearanceBodySmall"
+                                android:textColor="?attr/colorOnSurfaceVariant"
+                                android:text="@string/credentials_description" />
+
+                            <com.google.android.material.textfield.TextInputLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginBottom="8dp"
+                                style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+                                android:hint="@string/credential_ssid_hint"
+                                app:counterEnabled="true"
+                                app:counterMaxLength="32">
+                                <com.google.android.material.textfield.TextInputEditText
+                                    android:id="@+id/credentialSsidInput"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:maxLength="32"
+                                    android:inputType="text" />
+                            </com.google.android.material.textfield.TextInputLayout>
+
+                            <com.google.android.material.textfield.TextInputLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginBottom="8dp"
+                                style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+                                android:hint="@string/credential_password_hint"
+                                app:endIconMode="password_toggle"
+                                app:counterEnabled="true"
+                                app:counterMaxLength="32">
+                                <com.google.android.material.textfield.TextInputEditText
+                                    android:id="@+id/credentialPasswordInput"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:maxLength="32"
+                                    android:inputType="textPassword" />
+                            </com.google.android.material.textfield.TextInputLayout>
+
+                            <com.google.android.material.textfield.TextInputLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginBottom="8dp"
+                                style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+                                android:hint="@string/credential_token_hint"
+                                app:endIconMode="password_toggle"
+                                app:counterEnabled="true"
+                                app:counterMaxLength="32">
+                                <com.google.android.material.textfield.TextInputEditText
+                                    android:id="@+id/credentialTokenInput"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:maxLength="32"
+                                    android:inputType="textPassword" />
+                            </com.google.android.material.textfield.TextInputLayout>
+
+                            <com.google.android.material.textfield.TextInputLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+                                android:hint="@string/credential_ota_auth_hint"
+                                app:endIconMode="password_toggle"
+                                app:counterEnabled="true"
+                                app:counterMaxLength="32">
+                                <com.google.android.material.textfield.TextInputEditText
+                                    android:id="@+id/credentialOtaAuthInput"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:maxLength="32"
+                                    android:inputType="textPassword" />
+                            </com.google.android.material.textfield.TextInputLayout>
+                            </LinearLayout>
+
+                            <!-- SIM800 fields - shown only when Device mode is SIM800; a
+                                 completely separate set of values from the ESP32/ESP8266
+                                 ones above (see io.espflasher.app.sim800.Sim800Credentials). -->
+                            <LinearLayout
+                                android:id="@+id/sim800CredentialsGroup"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="vertical"
+                                android:visibility="gone"
+                                tools:visibility="visible">
+
+                                <TextView
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginBottom="8dp"
+                                    android:textAppearance="?attr/textAppearanceBodySmall"
+                                    android:textColor="?attr/colorOnSurfaceVariant"
+                                    android:text="@string/sim800_credentials_description" />
+
+                                <com.google.android.material.textfield.TextInputLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginBottom="8dp"
+                                    style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+                                    android:hint="@string/credential_sim800_firmware_revision_hint"
+                                    app:counterEnabled="true"
+                                    app:counterMaxLength="17">
+                                    <com.google.android.material.textfield.TextInputEditText
+                                        android:id="@+id/credentialSim800FirmwareRevisionInput"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+                                        android:maxLength="17"
+                                        android:inputType="text" />
+                                </com.google.android.material.textfield.TextInputLayout>
+
+                                <com.google.android.material.textfield.TextInputLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginBottom="8dp"
+                                    style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+                                    android:hint="@string/credential_sim800_product_name_hint"
+                                    app:counterEnabled="true"
+                                    app:counterMaxLength="14">
+                                    <com.google.android.material.textfield.TextInputEditText
+                                        android:id="@+id/credentialSim800ProductNameInput"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+                                        android:maxLength="14"
+                                        android:inputType="text" />
+                                </com.google.android.material.textfield.TextInputLayout>
+
+                                <com.google.android.material.textfield.TextInputLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginBottom="8dp"
+                                    style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+                                    android:hint="@string/credential_sim800_firmware_version_hint"
+                                    app:counterEnabled="true"
+                                    app:counterMaxLength="13">
+                                    <com.google.android.material.textfield.TextInputEditText
+                                        android:id="@+id/credentialSim800FirmwareVersionInput"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+                                        android:maxLength="13"
+                                        android:inputType="text" />
+                                </com.google.android.material.textfield.TextInputLayout>
+
+                                <com.google.android.material.textfield.TextInputLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginBottom="8dp"
+                                    style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+                                    android:hint="@string/credential_sim800_module_name_hint"
+                                    app:counterEnabled="true"
+                                    app:counterMaxLength="6">
+                                    <com.google.android.material.textfield.TextInputEditText
+                                        android:id="@+id/credentialSim800ModuleNameInput"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+                                        android:maxLength="6"
+                                        android:inputType="text" />
+                                </com.google.android.material.textfield.TextInputLayout>
+
+                                <com.google.android.material.textfield.TextInputLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+                                    android:hint="@string/credential_sim800_version_short_hint"
+                                    app:counterEnabled="true"
+                                    app:counterMaxLength="6">
+                                    <com.google.android.material.textfield.TextInputEditText
+                                        android:id="@+id/credentialSim800VersionShortInput"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+                                        android:maxLength="6"
+                                        android:inputType="text" />
+                                </com.google.android.material.textfield.TextInputLayout>
+                            </LinearLayout>
+                        </LinearLayout>
+                    </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
+
+                <!-- ============== READ FLASH TO FILE PANEL (offset/length for the bottom Read button) - lives on the Files tab ============== -->
+                <com.google.android.material.card.MaterialCardView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="10dp"
+                    style="@style/Widget.EspFlasher.Card">
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        style="@style/Widget.EspFlasher.CardContent">
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            style="@style/TextAppearance.EspFlasher.SectionTitle"
+                            android:text="@string/advanced_read_flash" />
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:layout_marginTop="4dp">
+
+                            <com.google.android.material.textfield.TextInputLayout
+                                android:layout_width="0dp"
+                                android:layout_weight="1"
+                                android:layout_height="wrap_content"
+                                style="@style/Widget.Material3.TextInputLayout.OutlinedBox.Dense"
+                                android:hint="@string/offset">
+                                <com.google.android.material.textfield.TextInputEditText
+                                    android:id="@+id/readOffsetInput"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:fontFamily="monospace"
+                                    android:inputType="text" />
+                            </com.google.android.material.textfield.TextInputLayout>
+
+                            <com.google.android.material.textfield.TextInputLayout
+                                android:layout_width="0dp"
+                                android:layout_weight="1"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="6dp"
+                                style="@style/Widget.Material3.TextInputLayout.OutlinedBox.Dense"
+                                android:hint="@string/length">
+                                <com.google.android.material.textfield.TextInputEditText
+                                    android:id="@+id/readLengthInput"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:fontFamily="monospace"
+                                    android:inputType="text" />
+                            </com.google.android.material.textfield.TextInputLayout>
+
+                            <!-- Quick-pick flash size (500KB..64MB) - selecting one fills
+                                 Length (and Offset, if it isn't already set) automatically;
+                                 see MainActivity#setupDropdowns and MainViewModel#applyReadSizePreset. -->
+                            <com.google.android.material.textfield.TextInputLayout
+                                android:layout_width="0dp"
+                                android:layout_weight="1"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="6dp"
+                                style="@style/Widget.Material3.TextInputLayout.OutlinedBox.Dense.ExposedDropdownMenu"
+                                android:hint="@string/read_size_preset">
+                                <AutoCompleteTextView
+                                    android:id="@+id/readSizePresetDropdown"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:inputType="none" />
+                            </com.google.android.material.textfield.TextInputLayout>
+                        </LinearLayout>
+                    </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
+
+                <View android:layout_width="match_parent" android:layout_height="72dp" />
+
+            </LinearLayout>
+        </androidx.core.widget.NestedScrollView>
+
+        <!-- ============== HEX UPLOADER TAB ==============
+             The full Arduino Hex Upload screen (STK500/AVR109/USBasp/
+             ArduinoISP), embedded directly - no launch button, no separate
+             Activity. Match_parent/match_parent so it fills the same space
+             the other three tabs get, but it is NOT a NestedScrollView like
+             them: ArduinoHexUploadFragment's own root is a CoordinatorLayout
+             with its own internal NestedScrollView + FAB (unchanged from
+             when this was its own screen), and nesting another scrolling
+             container around a CoordinatorLayout that already scrolls
+             internally would break touch/fling handling. FragmentContainerView
+             is managed by MainActivity's own FragmentManager - the fragment
+             instance, its ViewModelless-but-stateful fields (selected file,
+             upload mode, USB connection), and its view are all created once
+             and never destroyed by tab switches, only hidden/shown along
+             with this container, exactly like the other three tabs. -->
+        <androidx.fragment.app.FragmentContainerView
+            android:id="@+id/hexTabContent"
+            android:name="io.espflasher.app.arduinohex.ArduinoHexUploadFragment"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="gone" />
+
+        <!-- ============== SERIAL MONITOR TAB ==============
+             Arduino-IDE-style serial monitor: message box + Send on top, scrolling output, then one
+             row of Start / Reset / Copy / Clear / Settings buttons (same look and size as the
+             Flash tab's bottom buttons). Line ending, baud rate, autoscroll and timestamp live
+             in the Settings dialog. -->
+        <LinearLayout
+            android:id="@+id/monitorTabContent"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:padding="12dp"
+            android:visibility="gone">
+
+            <TextView
+                android:id="@+id/monitorStatusText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="6dp"
+                android:textAppearance="?attr/textAppearanceBodySmall"
+                android:textColor="?attr/colorOnSurfaceVariant"
+                android:visibility="gone" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical">
+
+                <com.google.android.material.textfield.TextInputLayout
+                    style="@style/Widget.Material3.TextInputLayout.OutlinedBox.Dense"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/monitor_message_hint">
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/monitorInput"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="monospace"
+                        android:imeOptions="actionSend"
+                        android:inputType="text"
+                        android:maxLines="1" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/monitorSendButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:text="@string/monitor_send" />
+            </LinearLayout>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/monitorRecyclerView"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:layout_marginTop="8dp"
+                android:background="@color/console_background"
+                android:clipToPadding="false"
+                android:padding="4dp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:orientation="horizontal"
+                android:weightSum="5">
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/monitorStartStopButton"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="2dp"
+                    android:padding="0dp"
+                    android:textSize="11sp"
+                    android:text="@string/monitor_start" />
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/monitorResetButton"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="2dp"
+                    android:padding="0dp"
+                    android:textSize="11sp"
+                    android:text="@string/monitor_reset_board" />
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/monitorCopyButton"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="2dp"
+                    android:padding="0dp"
+                    android:textSize="11sp"
+                    android:text="@string/copy" />
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/monitorClearButton"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="2dp"
+                    android:padding="0dp"
+                    android:textSize="11sp"
+                    android:text="@string/monitor_clear_output" />
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/monitorSettingsButton"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="2dp"
+                    android:padding="0dp"
+                    android:textSize="11sp"
+                    android:text="@string/monitor_settings" />
+            </LinearLayout>
+        </LinearLayout>
+
+    </FrameLayout>
+
+    <!-- ============== BOTTOM ACTION BAR ============== -->
+    <com.google.android.material.card.MaterialCardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:cardElevation="8dp"
+        app:cardCornerRadius="0dp">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="6dp"
+            android:weightSum="6">
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/detectButton"
+                style="@style/Widget.Material3.Button.TonalButton"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:layout_margin="2dp"
+                android:padding="0dp"
+                android:textSize="11sp"
+                android:text="@string/action_detect" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/eraseButton"
+                style="@style/Widget.Material3.Button.TonalButton"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:layout_margin="2dp"
+                android:padding="0dp"
+                android:textSize="11sp"
+                android:text="@string/action_erase" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/flashButton"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:layout_margin="2dp"
+                android:padding="0dp"
+                android:textSize="11sp"
+                android:text="@string/action_flash" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/verifyButton"
+                style="@style/Widget.Material3.Button.TonalButton"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:layout_margin="2dp"
+                android:padding="0dp"
+                android:textSize="11sp"
+                android:text="@string/action_verify" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/readButton"
+                style="@style/Widget.Material3.Button.TonalButton"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:layout_margin="2dp"
+                android:padding="0dp"
+                android:textSize="11sp"
+                android:text="@string/action_read" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/stopButton"
+                style="@style/Widget.Material3.Button.OutlinedButton"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:layout_margin="2dp"
+                android:padding="0dp"
+                android:textSize="11sp"
+                android:textColor="?attr/colorError"
+                android:text="@string/action_stop" />
+        </LinearLayout>
+    </com.google.android.material.card.MaterialCardView>
+
+</LinearLayout>

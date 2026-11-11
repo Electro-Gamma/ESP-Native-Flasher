@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Theme + widget styles for ArduinoHexUploadFragment, copied from the
+     reference arduino-hex-upload app's own themes.xml (color references
+     updated to the ahu_-prefixed names in arduino_hex_upload_colors.xml -
+     see that file's own comment). Applied via android:theme on this one
+     Activity in AndroidManifest.xml. The ahu_color_* roles referenced below
+     now resolve to the same esp_* brand colors as Theme.EspNativeFlasher
+     (see arduino_hex_upload_colors.xml), so this screen shares the main
+     app's teal/cyan look instead of its old separate teal+orange palette.
+     Structure (component styles, card shape, button corner radius) is
+     otherwise unchanged.
+
+     Parent is Theme.Material3.DayNight (not the old .Light-only parent) so
+     this screen actually follows the system/app dark-mode setting the same
+     way Theme.EspNativeFlasher does - the .Light parent meant this screen
+     could never go dark at all, regardless of device theme. Everything
+     below is still a plain @color/ahu_color_* reference, so the values
+     automatically swap to their dark equivalents via
+     values-night/arduino_hex_upload_colors.xml; only the two literal
+     android:windowLight*Bar booleans near the bottom can't follow a color
+     qualifier that way, which is why values-night/arduino_hex_upload_theme.xml
+     has to redeclare this whole style rather than just those two lines -
+     see that file's own comment for why. -->
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <style name="Theme.ArduinoHexUploader" parent="Theme.Material3.DayNight.NoActionBar">
+        <item name="colorPrimary">@color/ahu_color_primary</item>
+        <item name="colorOnPrimary">@color/ahu_color_on_primary</item>
+        <item name="colorPrimaryContainer">@color/ahu_color_primary_container</item>
+        <item name="colorOnPrimaryContainer">@color/ahu_color_on_primary_container</item>
+
+        <item name="colorSecondary">@color/ahu_color_secondary</item>
+        <item name="colorOnSecondary">@color/ahu_color_on_secondary</item>
+        <item name="colorSecondaryContainer">@color/ahu_color_secondary_container</item>
+        <item name="colorOnSecondaryContainer">@color/ahu_color_on_secondary_container</item>
+
+        <item name="android:colorBackground">@color/ahu_color_background</item>
+        <item name="colorOnBackground">@color/ahu_color_on_background</item>
+        <item name="colorSurface">@color/ahu_color_surface</item>
+        <item name="colorOnSurface">@color/ahu_color_on_surface</item>
+        <item name="colorSurfaceVariant">@color/ahu_color_surface_variant</item>
+        <item name="colorOnSurfaceVariant">@color/ahu_color_on_surface_variant</item>
+        <item name="colorOutline">@color/ahu_color_outline</item>
+
+        <item name="android:statusBarColor">@color/ahu_color_primary_dark</item>
+        <item name="android:navigationBarColor">@color/ahu_color_surface</item>
+        <item name="android:windowLightStatusBar" tools:targetApi="23">false</item>
+        <item name="android:windowLightNavigationBar" tools:targetApi="27">true</item>
+
+        <item name="materialButtonStyle">@style/Widget.ArduinoHexUploader.Button</item>
+        <item name="floatingActionButtonStyle">@style/Widget.ArduinoHexUploader.Fab</item>
+        <item name="toolbarStyle">@style/Widget.ArduinoHexUploader.Toolbar</item>
+    </style>
+
+    <style name="Widget.ArduinoHexUploader.Toolbar" parent="Widget.Material3.Toolbar">
+        <item name="android:background">@color/ahu_color_primary</item>
+        <item name="titleTextColor">@color/ahu_color_on_primary</item>
+        <item name="subtitleTextColor">@color/ahu_teal_100</item>
+    </style>
+
+    <style name="Widget.ArduinoHexUploader.Button" parent="Widget.Material3.Button">
+        <item name="backgroundTint">@color/ahu_color_secondary</item>
+        <item name="cornerRadius">12dp</item>
+        <item name="android:textColor">@color/ahu_color_on_secondary</item>
+        <item name="android:letterSpacing">0.02</item>
+        <item name="android:textAllCaps">true</item>
+    </style>
+
+    <style name="Widget.ArduinoHexUploader.Button.Outlined" parent="Widget.Material3.Button.OutlinedButton">
+        <item name="cornerRadius">12dp</item>
+        <item name="strokeColor">@color/ahu_color_outline</item>
+        <item name="android:textColor">@color/ahu_color_primary</item>
+    </style>
+
+    <style name="Widget.ArduinoHexUploader.Fab" parent="Widget.Material3.FloatingActionButton.Primary">
+        <item name="backgroundTint">@color/ahu_color_secondary</item>
+        <item name="tint">@color/ahu_color_on_secondary</item>
+    </style>
+
+    <!-- Elevated, no stroke - matches Widget.EspFlasher.Card (themes.xml) exactly,
+         so cards look the same as on the main ESP flasher screen. -->
+    <style name="Widget.ArduinoHexUploader.Card" parent="Widget.Material3.CardView.Elevated">
+        <item name="cardCornerRadius">16dp</item>
+    </style>
+
+    <style name="SectionLabelText.ArduinoHexUploader" parent="">
+        <item name="android:textColor">@color/ahu_color_secondary</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textSize">13sp</item>
+        <item name="android:letterSpacing">0.06</item>
+        <item name="android:textAllCaps">true</item>
+    </style>
+</resources>

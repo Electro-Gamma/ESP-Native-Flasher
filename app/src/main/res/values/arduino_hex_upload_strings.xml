@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Strings for ArduinoHexUploadFragment, copied from the reference
+     arduino-hex-upload app's own strings.xml. Three names collided with
+     this app's existing strings.xml: app_name and no_file_selected/browse
+     already say the right thing here too, so the layout just reuses those;
+     the reference's own app_name ("AVR Programmer") becomes
+     arduino_hex_upload_toolbar_title below instead. -->
+<resources>
+    <string name="arduino_hex_upload_toolbar_title">AVR Programmer</string>
+
+    <string name="section_hex_file">Hex file</string>
+
+    <string name="section_upload_type">Select type upload</string>
+    <string name="upload_type_standard">Standard</string>
+    <string name="upload_type_custom">Custom</string>
+    <string name="upload_type_usbasp">USBasp</string>
+    <string name="upload_type_arduino_isp">ArduinoISP</string>
+
+    <string name="board_label">Board</string>
+    <string name="mcu_label">MCU</string>
+    <string name="sck_speed_label">ISP clock speed</string>
+    <string name="memory_type_label">Memory</string>
+    <string name="read_action">Read</string>
+    <string name="verify_action">Verify</string>
+    <string name="protocol_label">Protocol</string>
+    <string name="baud_rate_label">Baud rate</string>
+    <string name="custom_board_name_label">Board name (optional)</string>
+
+    <string name="section_device">Device</string>
+    <string name="device_none">No USB device connected. Plug in your board.</string>
+    <string name="device_none_usbasp">No USBasp detected. Plug it in.</string>
+    <string name="device_needs_permission">USB permission needed — tap to grant.</string>
+    <string name="device_ready_format">%1$s detected</string>
+
+    <string name="section_log">Upload log</string>
+    <string name="log_placeholder">Upload messages will appear here.</string>
+    <string name="copy_log">Copy</string>
+    <string name="log_copied">Log copied</string>
+
+    <string name="upload">Upload</string>
+    <string name="uploading">Uploading…</string>
+    <string name="reading_device">Reading…</string>
+    <string name="verifying">Verifying…</string>
+
+    <string name="verify_checking">Checking hex file…</string>
+    <string name="verify_valid_format">Valid Intel HEX · %1$s of %2$s bytes used (%3$d%%)</string>
+    <string name="verify_invalid_format">Invalid hex file: %1$s</string>
+    <string name="verify_too_big_format">Program is larger than the target flash (%1$s available)</string>
+
+    <string name="error_no_usb">No USB device found. Connect your Arduino with a data-capable USB cable.</string>
+    <string name="error_usb_not_working">Couldn\'t open the USB device — try reconnecting the cable.</string>
+    <string name="error_cdc_driver">This board uses the generic USB-CDC driver, which didn\'t respond as expected.</string>
+    <string name="error_not_supported">This USB-serial chip isn\'t recognized by the driver.</string>
+    <string name="error_pick_hex_first">Select a hex file first.</string>
+    <string name="error_device_first">Connect and grant permission for a USB device first.</string>
+
+    <string name="upload_success">Upload complete ✓</string>
+    <string name="upload_failed">Upload failed — check the log below.</string>
+    <string name="verify_success">Verify complete ✓ — matches the loaded hex file</string>
+    <string name="verify_failed">Verify failed — check the log below.</string>
+    <string name="read_success">Read complete ✓</string>
+    <string name="read_failed">Read failed — check the log below.</string>
+    <string name="read_saved_format">Saved to %1$s</string>
+
+    <string name="cd_browse">Browse for a hex file</string>
+    <string name="cd_upload">Upload firmware to board</string>
+</resources>

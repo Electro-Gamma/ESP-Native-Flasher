@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Color palette for ArduinoHexUploadFragment's own theme (Theme.ArduinoHexUploader,
+     in arduino_hex_upload_theme.xml). Originally copied verbatim from the reference
+     arduino-hex-upload app (deep teal + warm amber-orange accent); the semantic
+     ahu_color_* roles below now point at this app's own esp_* brand colors
+     (colors.xml) instead, so this screen matches Theme.EspNativeFlasher's palette.
+     The old orange accent swatches are gone - ahu_color_secondary etc. now resolve
+     to the same teal/cyan brand used everywhere else in the app. Raw ahu_teal_*
+     swatches, the semantic status colors (success/warning/error/neutral) and the
+     surface/outline roles are unchanged: no name collisions with this app's own
+     colors.xml (esp_/log_/console_-prefixed), so nothing needed renaming. -->
+<resources>
+    <!-- Brand: deep teal (kept as a fallback scale; semantic roles below now
+         source directly from esp_* in colors.xml as the single source of truth) -->
+    <color name="ahu_teal_900">#00382E</color>
+    <color name="ahu_teal_800">#004D40</color>
+    <color name="ahu_teal_700">#00695C</color>
+    <color name="ahu_teal_600">#007A6B</color>
+    <color name="ahu_teal_500">#00897B</color>
+    <color name="ahu_teal_200">#80CBC4</color>
+    <color name="ahu_teal_100">#B2DFDB</color>
+    <color name="ahu_teal_050">#E4F4F2</color>
+
+    <color name="ahu_success_600">#2E7D32</color>
+    <color name="ahu_success_100">#DCEFDD</color>
+    <color name="ahu_error_600">#D32F2F</color>
+    <color name="ahu_error_100">#FBE1E1</color>
+    <color name="ahu_warning_700">#B26A00</color>
+    <color name="ahu_warning_100">#FFEFD6</color>
+
+    <color name="ahu_neutral_900">#1A1F1E</color>
+    <color name="ahu_neutral_700">#455049</color>
+    <color name="ahu_neutral_500">#6F7B76</color>
+    <color name="ahu_neutral_300">#C6CFCB</color>
+    <color name="ahu_neutral_100">#EEF2F1</color>
+    <color name="ahu_neutral_050">#F6F8F7</color>
+    <color name="ahu_white">#FFFFFF</color>
+
+    <!-- Semantic (light theme) - now sourced from this app's esp_* brand colors
+         (colors.xml) so ArduinoHexUploadFragment matches Theme.EspNativeFlasher. -->
+    <color name="ahu_color_primary">@color/esp_primary</color>
+    <color name="ahu_color_primary_dark">@color/esp_primary_dark</color>
+    <color name="ahu_color_on_primary">@color/esp_on_primary</color>
+    <color name="ahu_color_primary_container">@color/ahu_teal_050</color>
+    <color name="ahu_color_on_primary_container">@color/esp_primary_dark</color>
+
+    <color name="ahu_color_secondary">@color/esp_secondary</color>
+    <color name="ahu_color_on_secondary">@color/ahu_white</color>
+    <color name="ahu_color_secondary_container">@color/ahu_teal_100</color>
+    <color name="ahu_color_on_secondary_container">@color/esp_primary_dark</color>
+
+    <color name="ahu_color_background">@color/ahu_neutral_050</color>
+    <color name="ahu_color_on_background">@color/ahu_neutral_900</color>
+    <color name="ahu_color_surface">@color/ahu_white</color>
+    <color name="ahu_color_on_surface">@color/ahu_neutral_900</color>
+    <color name="ahu_color_surface_variant">@color/ahu_neutral_100</color>
+    <color name="ahu_color_on_surface_variant">@color/ahu_neutral_700</color>
+    <color name="ahu_color_outline">@color/ahu_neutral_300</color>
+</resources>

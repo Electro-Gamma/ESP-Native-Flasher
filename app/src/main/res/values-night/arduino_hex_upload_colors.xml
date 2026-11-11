@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Night-mode overrides for the ahu_color_* semantic roles defined in
+     values/arduino_hex_upload_colors.xml (see that file's own comment for
+     the light-mode values these replace, and the raw ahu_teal_*/ahu_neutral_*
+     swatches reused below - those don't need their own night variants,
+     only which of them each semantic role points to changes here).
+
+     Surface/background/outline roles point at the exact same esp_surface_dark/
+     esp_on_surface_dark/esp_surface_variant_dark colors
+     values-night/themes.xml uses for Theme.EspNativeFlasher, so this screen's
+     dark mode matches the ESP Flasher page's dark mode rather than inventing
+     a separate one. colorPrimary collapses onto esp_secondary the same way
+     values-night/themes.xml does for the main theme (a single brighter teal
+     reads better than the darker primary against a near-black background) -
+     colorSecondary was already esp_secondary in the light file, so this
+     merges the two the same way the main theme's dark variant does. -->
+<resources>
+    <color name="ahu_color_primary">@color/esp_secondary</color>
+    <color name="ahu_color_primary_dark">@color/esp_surface_dark</color>
+    <color name="ahu_color_primary_container">@color/ahu_teal_900</color>
+    <color name="ahu_color_on_primary_container">@color/ahu_teal_100</color>
+
+    <color name="ahu_color_secondary_container">@color/ahu_teal_800</color>
+    <color name="ahu_color_on_secondary_container">@color/ahu_teal_100</color>
+
+    <color name="ahu_color_background">@color/esp_surface_dark</color>
+    <color name="ahu_color_on_background">@color/esp_on_surface_dark</color>
+    <color name="ahu_color_surface">@color/esp_surface_dark</color>
+    <color name="ahu_color_on_surface">@color/esp_on_surface_dark</color>
+    <color name="ahu_color_surface_variant">@color/esp_surface_variant_dark</color>
+    <color name="ahu_color_on_surface_variant">@color/esp_on_surface_dark</color>
+    <color name="ahu_color_outline">@color/ahu_neutral_700</color>
+</resources>

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TextView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/logLineText"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:fontFamily="monospace"
+    android:textSize="12sp"
+    android:paddingHorizontal="4dp"
+    android:paddingVertical="1dp"
+    android:textIsSelectable="false"
+    tools:text="[12:00:00.000] [INFO] Connected to CP2102"
+    xmlns:tools="http://schemas.android.com/tools" />

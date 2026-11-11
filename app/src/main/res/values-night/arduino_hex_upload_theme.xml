@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Night-mode redeclaration of Theme.ArduinoHexUploader (see
+     values/arduino_hex_upload_theme.xml's own comment for the full picture).
+
+     Every item below is a plain @color/ahu_color_* reference and already
+     resolves to its dark equivalent automatically via
+     values-night/arduino_hex_upload_colors.xml - so the ONLY reason this
+     file has to exist at all is android:windowLightNavigationBar. In light
+     mode the nav bar is ahu_color_surface (white), so it needs dark icons
+     (true); in dark mode that same color reference now resolves to a near-
+     black surface, so it needs light icons (false) instead - a literal
+     boolean can't follow a color resource qualifier the way everything
+     else here does.
+
+     Android resource qualifiers replace a style wholesale per
+     config rather than merging it with its same-named sibling, so getting
+     that one boolean right for night means redeclaring the entire style
+     here, not just the line that differs - same reason
+     values-night/themes.xml fully redeclares Theme.EspNativeFlasher rather
+     than patching one attribute. -->
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <style name="Theme.ArduinoHexUploader" parent="Theme.Material3.DayNight.NoActionBar">
+        <item name="colorPrimary">@color/ahu_color_primary</item>
+        <item name="colorOnPrimary">@color/ahu_color_on_primary</item>
+        <item name="colorPrimaryContainer">@color/ahu_color_primary_container</item>
+        <item name="colorOnPrimaryContainer">@color/ahu_color_on_primary_container</item>
+
+        <item name="colorSecondary">@color/ahu_color_secondary</item>
+        <item name="colorOnSecondary">@color/ahu_color_on_secondary</item>
+        <item name="colorSecondaryContainer">@color/ahu_color_secondary_container</item>
+        <item name="colorOnSecondaryContainer">@color/ahu_color_on_secondary_container</item>
+
+        <item name="android:colorBackground">@color/ahu_color_background</item>
+        <item name="colorOnBackground">@color/ahu_color_on_background</item>
+        <item name="colorSurface">@color/ahu_color_surface</item>
+        <item name="colorOnSurface">@color/ahu_color_on_surface</item>
+        <item name="colorSurfaceVariant">@color/ahu_color_surface_variant</item>
+        <item name="colorOnSurfaceVariant">@color/ahu_color_on_surface_variant</item>
+        <item name="colorOutline">@color/ahu_color_outline</item>
+
+        <item name="android:statusBarColor">@color/ahu_color_primary_dark</item>
+        <item name="android:navigationBarColor">@color/ahu_color_surface</item>
+        <item name="android:windowLightStatusBar" tools:targetApi="23">false</item>
+        <item name="android:windowLightNavigationBar" tools:targetApi="27">false</item>
+
+        <item name="materialButtonStyle">@style/Widget.ArduinoHexUploader.Button</item>
+        <item name="floatingActionButtonStyle">@style/Widget.ArduinoHexUploader.Fab</item>
+        <item name="toolbarStyle">@style/Widget.ArduinoHexUploader.Toolbar</item>
+    </style>
+</resources>
