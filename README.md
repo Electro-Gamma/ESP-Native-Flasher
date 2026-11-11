@@ -2,7 +2,7 @@
 
 # ESP Native Flasher
 
-**Flash ESP32, ESP8266, BW16 and Arduino boards straight from your Android phone - no PC, no Python, no esptool.**
+**A native Android firmware flashing tool for ESP32, ESP8266, BW16, and Arduino boards. Flash, erase, verify, and manage firmware directly from your Android device over USB OTG — without requiring a PC, Python, or the desktop esptool utility.**
 
 [![Release](https://img.shields.io/github/v/release/ELECTRO-GAMMA/ESP-Native-Flasher?label=release)](https://github.com/ELECTRO-GAMMA/ESP-Native-Flasher/releases/latest)
 [![Downloads](https://img.shields.io/github/downloads/ELECTRO-GAMMA/ESP-Native-Flasher/total?label=downloads)](https://github.com/ELECTRO-GAMMA/ESP-Native-Flasher/releases)
@@ -13,7 +13,9 @@
 
 </div>
 
-ESP Native Flasher is a native Kotlin Android app that talks to your board over **USB OTG**. The ESP serial bootloader protocol and the USB-UART bridge drivers are implemented inside the app. Nothing is shelled out, there is no embedded Python and no bundled esptool.
+ESP Native Flasher is a fully native Android application developed in Kotlin, designed to communicate directly with supported microcontrollers through USB OTG.
+
+It implements the required flashing protocols and USB-to-serial communication within the application, providing firmware management capabilities without relying on external command-line environments, embedded Python interpreters, or a bundled desktop esptool installation.
 
 ---
 
